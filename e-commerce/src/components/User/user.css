@@ -1,0 +1,28 @@
+.i1{
+    border-bottom: 1px solid;
+    outline: none;
+    padding: 5px;
+}
+
+.table1 {
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+.th1, .td1 {
+    text-align: left;
+    padding: 8px;
+}
+  
+.profile-body{
+    height: calc(100vh - 20vh);
+}
+.profile-panel-container{
+    height: 100%;
+}
+.user-profile-left-side{
+    height: 100vh;
+}
+.order-table-container{
+    height: calc(100vh - 25vh);
+}
