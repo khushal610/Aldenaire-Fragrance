@@ -77,6 +77,8 @@ app.post('/api/get-userName',async (req,res) => {
   }
 })
 
+
+// working upon the user and admin login
 app.post('/api/login-user', async (req, res) => {
   try {
     const { email, password ,userType ,secretKey } = req.body;
@@ -89,21 +91,36 @@ app.post('/api/login-user', async (req, res) => {
       return res.status(400).send({ error: "Invalid Secret Key" });
     }
     if (!user) {
-      return res.status(400).send({ error: "User not found" });
+      return res.status(400).send({ error: "Please register before login" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
-      const token = jwt.sign(
-        { 
-          id: user._id,
-          email: user.email, 
-          userType 
-        },
-        JWT_SECRET,
-        {expiresIn:"7d"}
-      );
-      return res.status(200).json({ status: "ok", data: token,userType,email }); //username 
+      if(userType === "User"){
+        const token = jwt.sign(
+          { 
+            id: user._id,
+            email: user.email, 
+            userType 
+          },
+          JWT_SECRET,
+          {expiresIn:"7d"}
+        );
+        return res.status(200).json({ status: "ok", data: token,userType,email }); //username 
+      }
+      else if(userType === "Admin"){
+        const token = jwt.sign(
+          {
+            id: user._id,
+            email: user.email,
+            userType,
+            secretKey
+          },
+          JWT_SECRET,
+          {expiresIn:"1d"}
+        );
+        return res.status(200).json({ status: "ok", data: token,userType,email,secretKey });
+      }
     } else {
       return res.status(400).json({ status: "error", error: "Invalid Password" });
     }
@@ -204,7 +221,7 @@ app.post('/api/sendOTP',async(req,res) => {
         port:465,
         auth:{
             user:"pcability610@gmail.com",
-            pass:"snsj fezp upnt gmit"
+            pass:"nnbs nkpx tozi ovkl"
         }
     })
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -410,7 +427,7 @@ app.post('/api/create-order', async (req, res) => {
         port:465,
         auth:{
             user:"pcability610@gmail.com",
-            pass:"snsj fezp upnt gmit"
+            pass:"nnbs nkpx tozi ovkl"
         }
       })
 
@@ -538,7 +555,157 @@ app.post('/api/deleteUserAccount',async(req,res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+
+app.post('/api/deleteUserOrder-afterProfileDelete',async(req,res) => {
+  try {
+    const {email} = req.body
+    const deleteUserOrder = await orderModel.deleteMany({ email });
+    if(!deleteUserOrder){
+      return res.status(400).send({ message:"No Order Placed" });
+    }
+
+    const auth = nodemailer.createTransport({
+      service:'gmail',
+      secure:true,
+      port:465,
+      auth:{
+          user:"pcability610@gmail.com",
+          pass:"nnbs nkpx tozi ovkl"
+      }
+    })
+    const receiver = {
+        from:"pcability610@gmail.com",
+        to:email,
+        subject:"Order Canceled Due to Account Deletion",
+        html:`<p>
+                Dear Customer,<br />
+                We wanted to inform you that your recent order with Aldenaire Fragrance has been canceled because your account was deleted from our platform. Without an active account, we are unable to process orders or provide further assistance. If this was unexpected or if you'd like to place a new order, please feel free to create a new account on our website. Thank you for your understanding, and we look forward to serving you in the future.
+              </p>
+              <p>
+                Best regards,<br />
+                The Aldenaire Fragrance Team
+              </p>
+            `
+    }
+
+    auth.sendMail(receiver,(error,emailResponse) => {
+      if(error){
+        return error;
+      }
+      console.log("Account Deleted");
+      res.status(200).send({ data:"Account deleted" });
+    })
+
+    return res.status(200).send({ status:"ok",data:"User orders are also deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+// delete specific product from order
+app.post('/api/delete-product-from-order', async (req, res) => {
+  try {
+    const { email, id } = req.body;
+    const order = await orderModel.findOne({ email, 'orderInfo._id': id });
+    if (!order) {
+      return res.status(400).send({ error: "Order or product not found" });
+    }
+
+    if (order.orderInfo.length === 1) {
+      const deletedItem = await orderModel.deleteOne({ _id: order._id });
+      return res.status(200).send({ data:deletedItem,message: "Order deleted successfully" });
+    }
+
+    const deleteProductFromOrder = await orderModel.updateOne(
+      { email, 'orderInfo._id': id },
+      { $pull: { orderInfo: { _id: id } } }
+    );
+
+    if (deleteProductFromOrder.modifiedCount === 0) {
+      return res.status(400).send({ error: "Product not found in orderInfo" });
+    }
+    return res.status(200).send({ data: "Product deleted successfully from order" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: "An error occurred while deleting the product" });
+  }
+});
+
+
+app.post('/api/get-order-details',async(req,res) => {
+  try {
+    const { email } = req.body
+    const orderData = await orderModel.findOne({ email });
+    if(!orderData){
+      return res.status(400).send({ error:"There is no order placed from this user" });
+    }
+    return res.status(200).send({ data:orderData });
+  } catch (error) {
+    console.log(error);
+  }
 })
+
+
+app.post('/api/send-deleted-order-information', async (req, res) => {
+  try {
+    const { email,id,productName,productPrice,quantity,productImgUrl } = req.body;
+
+    const auth = nodemailer.createTransport({
+      service:'gmail',
+      secure:true,
+      port:465,
+      auth:{
+          user:"pcability610@gmail.com",
+          pass:"nnbs nkpx tozi ovkl"
+      }
+    })
+    const receiver = {
+        from:"pcability610@gmail.com",
+        to:email,
+        subject:"Your Order Has Been Modified",
+        html:`<p>
+                Dear Customer,<br>
+                We want to inform you that the product <strong>${productName}</strong> has been successfully removed from your recent order. <br />Here are the details of the deleted product:<br />
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Product Name</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Image</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Price</th>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${productName}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">
+                      <img src="${productImgUrl}" alt="${productName}" style="width: 50px; height: 50px;">
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${quantity}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${productPrice * quantity}</td>
+                  </tr>
+                </table><br />
+                If you have any questions or need further assistance regarding your order, please feel free to reach out to our customer service team. Thank you for choosing Aldenaire Fragrance!
+                <p>Warm regards,<br>
+                The Aldenaire Fragrance Team
+                </p>
+              </p>
+            `
+    }
+
+    auth.sendMail(receiver,(error,emailResponse) => {
+      if(error){
+        return error;
+      }
+      console.log("Account Deleted");
+      res.status(200).send({ data:"Account deleted" });
+    })
+
+  } catch (error) {
+    console.log("Server Error:", error);
+    res.status(500).send({ error: "An error occurred on the server" });
+  }
+});
 
 
 app.post('/api/delete-user-from-admin',async(req,res) => {

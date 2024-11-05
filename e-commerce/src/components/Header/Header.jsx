@@ -10,19 +10,24 @@ function Header() {
     const [userName, setUserName] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    // let userType = "User";
+    const userType = window.localStorage.getItem("userType") || "User";
 
     
     useEffect(() => {
+        // console.log(userType);
         const loginLogoutFunctionality = async () => {
             const token = localStorage.getItem('token');
             if (token) {
                 setIsLogged(true);
                 const tokenDecode = jwtDecode(token);
                 const email = tokenDecode.email;
+                // userType = tokenDecode.userType;
+                console.log(userType);
                 try {
                     const response = await axios.post('http://localhost:3000/api/get-userName', { email });
                     setUserName(response.data.data);
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
                 } catch (error) {
                     console.error('Error fetching username:', error);
                 }
@@ -33,6 +38,7 @@ function Header() {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('userType');
         setIsLogged(false);
         setUserName('');
         navigate('/login');
@@ -43,19 +49,31 @@ function Header() {
             <div className="logo">
                 <h1 className='text-2xl text-white special-text'>Fragment</h1>
             </div>
-            <div className="navigation">
-                <nav>
-                    <ul className='flex gap-3'>
-                        <li className='hover:text-white'><Link to={'/'}>Home</Link></li>
-                        <li className='hover:text-white'><Link to={'/about'}>About</Link></li>
-                        <li className='hover:text-white'><Link to={'/shop-products'}>Shop</Link></li>
-                        <li className='hover:text-white'><Link to={'/contact'}>Contact</Link></li>
-                        <li className='hover:text-white'>
-                          <Link to={'/profile'}> {isLogged ? userName : null}</Link> 
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            { userType == "User" ?
+                <div className="navigation">
+                    <nav>
+                        <ul className='flex gap-3'>
+                            <li className='hover:text-white'><Link to={'/'}>Home</Link></li>
+                            <li className='hover:text-white'><Link to={'/about'}>About</Link></li>
+                            <li className='hover:text-white'><Link to={'/shop-products'}>Shop</Link></li>
+                            <li className='hover:text-white'><Link to={'/contact'}>Contact</Link></li>
+                            <li className='hover:text-white'>
+                            <Link to={'/profile'}> {isLogged ? userName : null}</Link> 
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                : 
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                {"Admin : " + userName}
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
             <div className="header-icons flex items-center justify-center gap-3">
                 <NavLink to={'/cart'}>
                     <button className='rounded-full p-3 flex gap-2 items-center border-white border hover:bg-white transition duration-300 ease-in-out relative'>

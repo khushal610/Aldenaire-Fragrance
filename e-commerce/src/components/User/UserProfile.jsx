@@ -34,18 +34,22 @@ function UserProfile() {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);  
+  }, []);
 
   const deleteUserAccount = async() => {
     try{
       let checkDeleteStatus = confirm('You really want to delete your account?');
       if(checkDeleteStatus){
-        // write a code to delete a user from database
         const deleteUser = await axios.post('http://localhost:3000/api/deleteUserAccount',{ email });
         console.log(deleteUser.data.data);
-        alert('Account Deleted Successful');
-        window.localStorage.clear();
-        navigate('/login');
+        if(deleteUser){
+          const deleteUserOrder = await axios.post('http://localhost:3000/api/deleteUserOrder-afterProfileDelete',{ email })
+          .catch((err) => console.log(err));
+          console.log(deleteUserOrder.data.data);
+          alert('Account Deleted Successful');
+          window.localStorage.clear();
+          navigate('/login');
+        }
       }
       else{
         alert('process abort');

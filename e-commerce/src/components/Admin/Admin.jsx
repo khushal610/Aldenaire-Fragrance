@@ -1,13 +1,20 @@
-import React, { useState } from 'react'
-import {Link, Outlet} from 'react-router-dom'
-import axios from 'axios'
-import './adminStyle.css'
+import React, { useEffect, useState } from 'react';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import './adminStyle.css';
+import { jwtDecode } from 'jwt-decode';
 
 function Admin() {
 
-  const [userData,setUserData] = useState('')
+  const [userData,setUserData] = useState('');
+  const navigate = useNavigate(); 
 
-  async() => {
+  const token = window.localStorage.getItem("token");
+  // const decodeToken = jwtDecode(token);
+  // const userType = decodeToken.userType;
+  // console.log(userType);
+
+  const verify = async() => {
     await axios.post('http://localhost:3000/user-logged',{
       token:window.localStorage.getItem("token")
     })
@@ -15,10 +22,22 @@ function Admin() {
     .then((data) => {
       console.log(data,"userData");
       setUserData({userData:data.data});
-    })
-    
+    });
+  };
+
+  useEffect(() => {
+    if(!token) {
+      alert('Secured Site Login First');
+      navigate('/login');
+      return;
+    }
+    console.log(token);
+    verify();
+  },[])
+
+  if (!token) { 
+    return null; 
   }
-  
 
   return (
     <div className='flex'>

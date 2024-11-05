@@ -30,6 +30,7 @@ function OrderForm() {
                 
                 setProductData(productDetails.data.data);
                 console.log(productDetails.data.data[0].userInfo);
+                // console.log(productDetails.data.data);
             } catch (error) {
                 console.log(error);
             }
@@ -67,7 +68,8 @@ function OrderForm() {
             .catch((err) => console.log(err));
 
             if (result.status === 200) {
-                const deleteCartData = await axios.post('http://localhost:3000/api/delete-cart-after-order', { email });
+                const deleteCartData = await axios.post('http://localhost:3000/api/delete-cart-after-order', { email })
+                .catch((err) => console.log(err));
                 console.log(deleteCartData.data.data);
                 alert('Your order was placed successfully');
                 navigate('/profile/orders');

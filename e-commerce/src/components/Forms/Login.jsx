@@ -25,15 +25,18 @@ function Login() {
       if (data.userType === "User") {
         navigate("/");
         window.localStorage.setItem("token",res.data.data);
+        window.localStorage.setItem("userType",userType);
         alert("User Login Successful");
-      } else if (data.userType === "Admin") {
+      } 
+      else if (data.userType === "Admin") {
         navigate("/admin");
+        window.localStorage.setItem("token",res.data.data);
+        window.localStorage.setItem("userType",userType);
         alert("Admin Login Successful");
       }
     } catch (error) {
       console.error('Login error:', error);
       alert(error.response?.data?.error || 'An error occurred during login. Please try again.');
-      // alert('An error occurred during login. Please try again.');
     }
   }
 
