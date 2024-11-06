@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+require('dotenv').config();
 
-mongoose.connect("mongodb://127.0.0.1/demo")
+mongoose.connect(process.env.MONGODB_PATH)
 .then(() => { console.log("Contact Form MongoDB connection successful") })
 .catch((err) => { console.log("error to connect with server") })
 

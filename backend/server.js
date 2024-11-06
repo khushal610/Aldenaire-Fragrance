@@ -7,11 +7,12 @@ const productModel = require('./models/product-model');
 const userCartModel = require("./models/user-cart-model");
 const contactUsModel = require("./models/contact-model");
 const orderModel = require("./models/order-model");
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
-const JWT_SECRET = "fwfjeckwebfhi3fjierfNJFWODEFAJ123jds2q92wfjei234e3dn3d23ksanfwejfwljednojsdkhdfgeir";
+const port = process.env.PORT || 3001;  // Set default port
+const JWT_SECRET = process.env.TOKEN_SECRET;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -221,7 +222,7 @@ app.post('/api/sendOTP',async(req,res) => {
         port:465,
         auth:{
             user:"pcability610@gmail.com",
-            pass:"nnbs nkpx tozi ovkl"
+            pass:process.env.EMAIL_SERVICE_PASSWORD
         }
     })
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -427,7 +428,7 @@ app.post('/api/create-order', async (req, res) => {
         port:465,
         auth:{
             user:"pcability610@gmail.com",
-            pass:"nnbs nkpx tozi ovkl"
+            pass:process.env.EMAIL_SERVICE_PASSWORD
         }
       })
 
@@ -541,7 +542,6 @@ app.post('/api/delete-cart-after-order', async (req, res) => {
 });
 
 
-
 app.post('/api/deleteUserAccount',async(req,res) => {
   try {
     const {email} = req.body
@@ -572,7 +572,7 @@ app.post('/api/deleteUserOrder-afterProfileDelete',async(req,res) => {
       port:465,
       auth:{
           user:"pcability610@gmail.com",
-          pass:"nnbs nkpx tozi ovkl"
+          pass:process.env.EMAIL_SERVICE_PASSWORD
       }
     })
     const receiver = {
@@ -594,7 +594,6 @@ app.post('/api/deleteUserOrder-afterProfileDelete',async(req,res) => {
       if(error){
         return error;
       }
-      console.log("Account Deleted");
       res.status(200).send({ data:"Account deleted" });
     })
 
@@ -659,7 +658,7 @@ app.post('/api/send-deleted-order-information', async (req, res) => {
       port:465,
       auth:{
           user:"pcability610@gmail.com",
-          pass:"nnbs nkpx tozi ovkl"
+          pass:process.env.EMAIL_SERVICE_PASSWORD
       }
     })
     const receiver = {
