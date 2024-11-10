@@ -20,7 +20,7 @@ function Admin() {
     })
     .then((res) => { res.json() })
     .then((data) => {
-      console.log(data,"userData");
+      // console.log(data,"userData");
       setUserData({userData:data.data});
     });
   };
@@ -31,7 +31,7 @@ function Admin() {
       navigate('/login');
       return;
     }
-    console.log(token);
+    // console.log(token);
     verify();
   },[])
 

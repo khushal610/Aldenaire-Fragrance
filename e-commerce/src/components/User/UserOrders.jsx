@@ -12,7 +12,7 @@ function UserOrders() {
 
   const handleToShowOrderData = async () => {
     try {
-      const orderDetails = await axios.post('http://localhost:3000/api/get-order-data', { email });
+      const orderDetails = await axios.post('http://localhost:3000/api/get-user-order-details', { email });
       setOrderData(orderDetails.data.data);
       // console.log(orderDetails.data.data);
     } catch (error) {
