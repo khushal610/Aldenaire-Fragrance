@@ -634,20 +634,6 @@ app.post('/api/delete-product-from-order', async (req, res) => {
 });
 
 
-app.post('/api/get-user-order-details',async(req,res) => {
-  try {
-    const { email } = req.body
-    const orderData = await orderModel.findOne({ email });
-    if(!orderData){
-      return res.status(400).send({ error:"There is no order placed from this user" });
-    }
-    return res.status(200).send({ status:"ok",data:orderData });
-  } catch (error) {
-    console.log(error);
-  }
-})
-
-
 app.get('/api/get-all-order-data',async(req,res) => {
     try {
         const allOrderData = await orderModel.find();

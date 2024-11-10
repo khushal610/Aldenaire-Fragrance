@@ -12,14 +12,14 @@ function UserOrders() {
 
   const handleToShowOrderData = async () => {
     try {
-      const orderDetails = await axios.post('http://localhost:3000/api/get-user-order-details', { email });
+      const orderDetails = await axios.post('http://localhost:3000/api/get-order-data', { email });
       setOrderData(orderDetails.data.data);
-      // console.log(orderDetails.data.data);
+      console.log(orderDetails.data.data);
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   useEffect(() => {
     handleToShowOrderData();
   }, []);
@@ -68,9 +68,9 @@ function UserOrders() {
             </tr>
           </thead>
           <tbody>
-            {orderData.map((element, index) => (
-              element.orderInfo.map((order, orderIndex) => (
-                <tr className="tr1" key={`${index}-${orderIndex}`}>
+          {orderData.map((element, index) => (
+             element.orderInfo.map((order, orderIndex) => (
+                 <tr className="tr1" key={`${index}-${orderIndex}`}>
                   <td className="td1">{order.productName}</td>
                   <td className="td1">
                     <img src={order.productImgUrl} alt="Product" width={"30%"} />
