@@ -41,7 +41,35 @@ app.post('/', async (req, res) => {
       address
     });
 
+    const auth = nodemailer.createTransport({
+      service:'gmail',
+      secure:true,
+      port:465,
+      auth:{
+          user:"pcability610@gmail.com",
+          pass:process.env.EMAIL_SERVICE_PASSWORD
+      }
+    })
+    const receiver = {
+        from:"pcability610@gmail.com",
+        to:email,
+        subject:`Welcome to Aldenaire Fragrance, ${username}! Your Journey with Exquisite Scents Begins Here`,
+        html:`
+        <p>
+          Hello, ${username} <br />
+          Welcome to Aldenaire Fragrance! We're thrilled to have you here. Thank you for signing in and becoming part of our community. Your presence means a lot to us as we continue crafting exquisite fragrances tailored just for you. Explore our exclusive collections, discover your new signature scent, and enjoy a personalized shopping experience. If there’s anything we can assist you with, don’t hesitate to reach out. Happy browsing, and once again, welcome to Aldenaire Fragrance!
+        </p>`
+    }
+
+    auth.sendMail(receiver,(error,emailResponse) => {
+      if(error){
+        return error;
+      }
+      console.log("Registration Success Email sent");
+    })
+
     res.status(200).send("User Created");
+
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
