@@ -37,7 +37,8 @@
 }
 
 .product-viewer-body{
-    height: calc(100vh - 37.5vh);
+    height: calc(100vh - 20vh);
+    padding-bottom: 1.1%;
 }
 
 .products-view-container{

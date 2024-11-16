@@ -2,13 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+
 const userModel = require('./models/user-model');
 const productModel = require('./models/product-model');
 const userCartModel = require("./models/user-cart-model");
 const contactUsModel = require("./models/contact-model");
 const orderModel = require("./models/order-model");
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+const adminModel = require("./models/admin-model");
 
 const app = express();
 const port = process.env.PORT || 3001;  // Set default port
@@ -107,18 +109,17 @@ app.post('/api/get-userName',async (req,res) => {
 })
 
 
-// working upon the user and admin login
 app.post('/api/login-user', async (req, res) => {
   try {
-    const { email, password ,userType ,secretKey } = req.body;
+    const { email, password ,userType } = req.body;
     const user = await userModel.findOne({ email });
 
     if(!userType){
       return res.status(400).send({error:"User Type is not define"});
     }
-    if (userType === "Admin" && secretKey !== "perfume") {
-      return res.status(400).send({ error: "Invalid Secret Key" });
-    }
+    // if (userType === "Admin" && secretKey !== "perfume") {
+    //   return res.status(400).send({ error: "Invalid Secret Key" });
+    // }
     if (!user) {
       return res.status(400).send({ error: "Please register before login" });
     }
@@ -137,19 +138,19 @@ app.post('/api/login-user', async (req, res) => {
         );
         return res.status(200).json({ status: "ok", data: token,userType,email }); //username 
       }
-      else if(userType === "Admin"){
-        const token = jwt.sign(
-          {
-            id: user._id,
-            email: user.email,
-            userType,
-            secretKey
-          },
-          JWT_SECRET,
-          {expiresIn:"1d"}
-        );
-        return res.status(200).json({ status: "ok", data: token,userType,email,secretKey });
-      }
+      // else if(userType === "Admin"){
+      //   const token = jwt.sign(
+      //     {
+      //       id: user._id,
+      //       email: user.email,
+      //       userType,
+      //       secretKey
+      //     },
+      //     JWT_SECRET,
+      //     {expiresIn:"1d"}
+      //   );
+      //   return res.status(200).json({ status: "ok", data: token,userType,email,secretKey });
+      // }
     } else {
       return res.status(400).json({ status: "error", error: "Invalid Password" });
     }
@@ -160,10 +161,46 @@ app.post('/api/login-user', async (req, res) => {
 });
 
 
+app.post('/api/login-admin', async (req, res) => {
+  try {
+    const { email, password, userType, secretKey } = req.body;
+
+    if (userType !== "Admin" || secretKey !== "perfume") {
+      return res.status(403).send({ error: "Invalid credentials for admin login" });
+    }
+
+    const findAdmin = await adminModel.findOne({ email });
+    if (!findAdmin) {
+      return res.status(404).send({ error: "Admin not found" });
+    }
+
+    const isAdminPasswordValid = await bcrypt.compare(password, findAdmin.password);
+    if (!isAdminPasswordValid) {
+      return res.status(401).send({ error: "Invalid password" });
+    }
+
+    const AdminToken = jwt.sign(
+      {
+        id: findAdmin._id,
+        email: findAdmin.email,
+        username: findAdmin.username
+      },
+      JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    return res.status(200).send({ status: "ok", data: AdminToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 app.post('/user-logged',async(req,res) => {
     const {token} = req.body;
     try {
-      const user = jwt.verify(token,process.env.JWT_SECRET);
+      const user = jwt.verify(token,JWT_SECRET);
       const useremail = user.email;
       userModel.findOne({ email:useremail })
       .then((data) => {
@@ -177,6 +214,24 @@ app.post('/user-logged',async(req,res) => {
         console.log(error)
     }
 })
+
+
+app.post('/admin-logged',async(req,res) => {
+  const { AdminToken } = req.body;
+  try {
+    const admin = jwt.verify(AdminToken,JWT_SECRET);
+    const adminEmail = admin.email;
+    adminModel.findOne({ email:adminEmail })
+    .then((data) => {
+        res.send({ status:"ok",data:data });
+    })
+    .catch((error) => {
+        res.send({ status:"error",data:error });
+    })
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 
 app.post('/api/add-products',async(req,res) => {
@@ -193,7 +248,7 @@ app.post('/api/add-products',async(req,res) => {
         productPrice,
         productDescription
       })
-      res.status(200).send({data:"Product Added"})
+      res.status(200).send({data:"Product Added",status:"ok"})
     } catch (error) {
       console.log(error);
     }
@@ -215,6 +270,37 @@ app.delete('/api/delete-products/:productID', async (req, res) => {
   }
 });
 
+
+app.post('/api/update-product',async(req,res) => {
+  try{
+    const { productID,productName,productImgUrl,productPrice,productDescription } = req.body
+    const findProduct = await productModel.findOne({ productID });
+    if(!findProduct){
+      return res.status(400).send({ error:"Product not found" });
+    }
+    const updateProduct = await productModel.updateOne({ productID },{$set:{ productName,productImgUrl,productPrice,productDescription }});
+    if(!updateProduct){
+      return res.status(400).send({ error:"Product not updated" });
+    }
+    return res.status(200).send({ status:"ok",data:updateProduct });
+  }catch(error){
+    console.log(error);
+  }
+});
+
+
+app.post('/api/find-products-from-admin',async(req,res) => {
+  try{
+    const { productID } = req.body
+    const sendProductData = await productModel.findOne({ productID });
+    if(!sendProductData){
+      return res.status(400).send({ error:"Product not found" });
+    }
+    return res.status(200).send({ data:sendProductData,status:"ok" });
+  }catch(error){
+    console.log(error);
+  }
+})
 
 
 app.get('/api/get-products',async(req,res) => {

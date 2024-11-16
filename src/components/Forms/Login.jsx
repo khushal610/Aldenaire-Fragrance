@@ -13,32 +13,69 @@ function Login() {
 
   const loginHandle = async(e) => {
     e.preventDefault();
-    if (userType === "Admin" && secretKey !== "perfume") {
-      alert("Invalid Secret Key");
-      return;
-    }
+    // if (userType === "Admin" && secretKey !== "perfume") {
+    //   alert("Invalid Secret Key");
+    //   return;
+    // }
     try {
-      const res = await axios.post('http://localhost:3000/api/login-user',{ email,password,userType,secretKey });
-      const data = res.data;
-      console.log(data, "User Login");
-
-      if (data.userType === "User") {
-        navigate("/");
-        window.localStorage.setItem("token",res.data.data);
-        window.localStorage.setItem("userType",userType);
-        alert("User Login Successful");
-      } 
-      else if (data.userType === "Admin") {
-        navigate("/admin");
-        window.localStorage.setItem("token",res.data.data);
-        window.localStorage.setItem("userType",userType);
-        alert("Admin Login Successful");
+      if(userType == "User"){
+        console.log(userType);
+        const res = await axios.post('http://localhost:3000/api/login-user',{ email,password,userType });
+        const data = res.data;
+        console.log(data, "User Login");
+  
+        if (data.userType === "User") {
+          navigate("/");
+          window.localStorage.setItem("token",res.data.data);
+          window.localStorage.setItem("userType","User");
+          alert("User Login Successful");
+        } 
       }
+      if(userType == "Admin"){
+        handleAdminLogin(email,password,userType,secretKey);
+      }
+          // if(userType == "Admin" && secretKey == "perfume"){
+          //   console.log(userType);
+          //   console.log(secretKey);
+          //   const res = await axios.post('http://localhost:3000/api/login-admin',{ email,password,userType,secretKey })
+          //   .catch((error) => { console.log(error) });
+          //   console.log(res.data);
+          // }
+      // else if (data.userType === "Admin") {
+      //   navigate("/admin");
+      //   window.localStorage.setItem("token",res.data.data);
+      //   window.localStorage.setItem("userType",userType);
+      //   alert("Admin Login Successful");
+      // }
     } catch (error) {
       console.error('Login error:', error);
       alert(error.response?.data?.error || 'An error occurred during login. Please try again.');
     }
   }
+
+  const handleAdminLogin = async (email, password, userType, secretKey) => {
+    if (userType === "Admin" && secretKey === "perfume") {
+      try {
+        const res = await axios.post('http://localhost:3000/api/login-admin', {
+          email,
+          password,
+          userType,
+          secretKey,
+        });
+        console.log(res.data.data);
+        window.localStorage.setItem("AdminToken",res.data.data);
+        window.localStorage.setItem("userType","Admin");
+        navigate("/admin");
+        alert('Admin Login successful');
+        // Save the token or handle successful login here
+      } catch (error) {
+        console.error("Error logging in:", error.response?.data || error.message);
+        alert('Please enter valid data');
+      }
+    } else {
+      console.error("Invalid user type or secret key");
+    }
+  };
 
   return (
     <>

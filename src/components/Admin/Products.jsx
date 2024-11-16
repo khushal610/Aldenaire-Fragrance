@@ -8,23 +8,57 @@ function Products() {
   const [productImgUrl, setProductImgUrl] = useState('')
   const [productPrice, setProductPrice] = useState('')
   const [productDescription, setProductDescription] = useState('')
-
   
+  const [totalProducts,setTotalProducts] = useState([]);
+  const [productData,setProductData] = useState([]);
+
+  const fetchTotalProducts = async() => {
+    const result = await axios.get('http://localhost:3000/api/get-products');
+    setTotalProducts(result.data);
+  }
+  useEffect(() => {
+    fetchTotalProducts();
+  },[])
+
+  const findProducts = async() => {
+    try{
+      // console.log(productID);
+      const result = await axios.post('http://localhost:3000/api/find-products-from-admin',{ productID })
+      .catch((error) => {
+        alert("Product Not Found",error);
+      });
+      // console.log(result.data.data);
+      setProductData(result.data.data);
+      setProductName(productData.productName);
+      setProductImgUrl(productData.productImgUrl);
+      setProductPrice(productData.productPrice);
+      setProductDescription(productData.productDescription);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const FetchProductID = (e) => {
+    const value = e.target.value;
+    setProductID(value);
+  
+    if (value === "") {
+      setProductName('');
+      setProductImgUrl('');
+      setProductPrice('');
+      setProductDescription('');
+    }
+  };
 
   const addProduct = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post('http://localhost:3000/api/add-products', { productID,productName, productImgUrl, productPrice, productDescription })
-        .then(() => { console.log('Form Submitted') })
-        .catch((err) => { 
-          console.log(err); 
-          // if(err.response && err.response.status === 400){
-          //   alert("Product Id or product is alerady Exist");
-          // }
-        })
-
-        if(result && result.status === 200){
+      const result = await axios.post('http://localhost:3000/api/add-products', { productID,productName, productImgUrl, productPrice, productDescription }).catch((err) => { console.log(err) });
+        console.log(result);
+        // alert('Product Added Successfully');
+        if(result.data && result.data.status === "ok"){
           alert('Product Added Successfully');
+          fetchTotalProducts();
         }
     } catch (error) {
       console.log(error);
@@ -44,6 +78,7 @@ function Products() {
   
       if (result && result.status === 200) {
         alert('Product deleted successfully');
+        fetchTotalProducts();
         setProductData(productData.filter(product => product.productID !== productID));
       }
     } catch (error) {
@@ -51,12 +86,25 @@ function Products() {
     }
   }
   
+
+  const updateProduct = async() => {
+    try {
+      // console.log(productID);
+      const result = await axios.post(`http://localhost:3000/api/update-product`,{ productID,productName,productImgUrl,productPrice,productDescription })
+      .catch((err) => { console.log(err) });
+      alert('Product details are updated');
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   return (
     <div>
       {/* Add Products from admin panel */}
       <div className='add-products-form-container flex items-center justify-center'>
-          <form method='POST' onSubmit={addProduct} autoComplete='off'>
+          <form method='POST' autoComplete='off'>
+            <h2>Total number of products are : {totalProducts.length}</h2>
               <table className='mt-5 add-product-table'>
                 <thead>
                   <tr>
@@ -69,7 +117,7 @@ function Products() {
                         type="text" 
                         name='productID' 
                         value={productID} 
-                        onChange={(e) => setProductID(e.target.value)} 
+                        onChange={(e) => FetchProductID(e)} 
                         required
                       />
                     </td>
@@ -137,17 +185,28 @@ function Products() {
                     ></textarea>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <button className='text-white bg-blue-600 px-3 py-2 rounded-md hover:text-blue-600 hover:border hover:border-blue-600 hover:bg-white transition-all duration-300 hover:shadow-md'>Add Product</button>  
-                  </td>
-                  <td>
-                    <button 
-                    onClick={handleDeleteProduct}
-                    className='text-white bg-red-600 px-3 py-2 rounded-md hover:text-red-600 hover:border hover:border-red-600 hover:bg-white transition-all duration-300 hover:shadow-md'>Remove Product</button>  
-                  </td>
-                </tr>
+                {/* <tr>
+                  <td> */}
+                  {/* </td>
+                  <td className='flex gap-4'> */}
+                  {/* </td>
+                </tr> */}
               </table>
+              <div className='flex gap-4'>
+                <button 
+                  className='text-white bg-blue-600 px-3 py-2 rounded-md hover:text-blue-600 hover:border hover:border-blue-600 hover:bg-white transition-all duration-300 hover:shadow-md'
+                  onClick={() => findProducts()}
+                >Find Product</button>  
+                <button className='text-white bg-blue-600 px-3 py-2 rounded-md hover:text-blue-600 hover:border hover:border-blue-600 hover:bg-white transition-all duration-300 hover:shadow-md'
+                  onClick={(e) => addProduct(e)}
+                >Add Product</button>  
+                  <button 
+                  onClick={handleDeleteProduct}
+                  className='text-white bg-red-600 px-3 py-2 rounded-md hover:text-red-600 hover:border hover:border-red-600 hover:bg-white transition-all duration-300 hover:shadow-md'>Remove Product</button>  
+                  <button 
+                  onClick={() => updateProduct()}
+                  className='text-white bg-red-600 px-3 py-2 rounded-md hover:text-red-600 hover:border hover:border-red-600 hover:bg-white transition-all duration-300 hover:shadow-md'>Update Product</button>  
+              </div>
           </form>
       </div>
 

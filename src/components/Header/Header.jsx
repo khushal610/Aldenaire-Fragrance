@@ -18,16 +18,22 @@ function Header() {
         // console.log(userType);
         const loginLogoutFunctionality = async () => {
             const token = localStorage.getItem('token');
+            const AdminToken = localStorage.getItem('AdminToken');
+            if (AdminToken) {
+                setIsLogged(true);
+                const AdminTokenDecode = jwtDecode(AdminToken);
+                const AdminName = AdminTokenDecode.username;
+                console.log(AdminName);
+                setUserName(AdminName);
+            }
             if (token) {
                 setIsLogged(true);
                 const tokenDecode = jwtDecode(token);
                 const email = tokenDecode.email;
-                // userType = tokenDecode.userType;
                 console.log(userType);
                 try {
                     const response = await axios.post('http://localhost:3000/api/get-userName', { email });
                     setUserName(response.data.data);
-                    // console.log(response.data.data);
                 } catch (error) {
                     console.error('Error fetching username:', error);
                 }
@@ -37,11 +43,22 @@ function Header() {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userType');
-        setIsLogged(false);
-        setUserName('');
-        navigate('/login');
+        const userToken = window.localStorage.getItem('token');
+        const AdminToken = window.localStorage.getItem('AdminToken');
+        if(userToken){
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            setIsLogged(false);
+            setUserName('');
+            navigate('/login');
+        }
+        if(AdminToken){
+            localStorage.removeItem('AdminToken');
+            localStorage.removeItem('userType');
+            setIsLogged(false);
+            setUserName('');
+            navigate('/login');
+        }
     };
 
     return (

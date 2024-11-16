@@ -2,40 +2,36 @@ import React, { useEffect, useState } from 'react';
 import {Link, Outlet, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import './adminStyle.css';
-import { jwtDecode } from 'jwt-decode';
+// import { jwtDecode } from 'jwt-decode';
 
 function Admin() {
 
   const [userData,setUserData] = useState('');
   const navigate = useNavigate(); 
 
-  const token = window.localStorage.getItem("token");
-  // const decodeToken = jwtDecode(token);
-  // const userType = decodeToken.userType;
-  // console.log(userType);
+  const AdminToken = window.localStorage.getItem("AdminToken");
 
   const verify = async() => {
-    await axios.post('http://localhost:3000/user-logged',{
-      token:window.localStorage.getItem("token")
+    await axios.post('http://localhost:3000/admin-logged',{
+      AdminToken:window.localStorage.getItem("AdminToken")
     })
-    .then((res) => { res.json() })
+    // .then((res) => { res.json() })
     .then((data) => {
-      // console.log(data,"userData");
       setUserData({userData:data.data});
+      console.log(userData);
     });
   };
 
   useEffect(() => {
-    if(!token) {
+    if(!AdminToken) {
       alert('Secured Site Login First');
       navigate('/login');
       return;
     }
-    // console.log(token);
     verify();
   },[])
 
-  if (!token) { 
+  if (!AdminToken) { 
     return null; 
   }
 
@@ -43,7 +39,7 @@ function Admin() {
     <div className='flex'>
         <div className='left-admin-panel w-2/12 flex flex-col items-center pt-10'>
           <div className='flex flex-col gap-3 py-3'>
-          <Link to="/admin/product">Add Products</Link>
+          <Link to="/admin/product">Add/Update Products</Link>
           <Link to="/admin/manage-products">Manage Products</Link>
           <Link to="/admin/orders">Manage Orders</Link>
           <Link to="/admin/users">Manage Users</Link>
