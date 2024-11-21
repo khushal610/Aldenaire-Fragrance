@@ -37,7 +37,7 @@ function Contact() {
           <div className='content-holder flex flex-col gap-4 p-7'>
             <h1 className='text-3xl font-medium flex items-center gap-2'><RiContactsFill /> Contact us</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex eaque dolor omnis neque, ipsam ab debitis, numquam dignissimos praesentium ducimus at expedita. Aperiam tempore aspernatur eum, et ut ex illum quisquam nulla enim tenetur nisi omnis fugiat nobis. Debitis, quisquam!</p>
-            <p className='flex items-center'><MdPhone /> +91 98972 21323</p>
+            <p className='flex items-center'><MdPhone /> +91 12345 67890</p>
             <div className='social-contact-support'>
               <p className='text-xl font-medium'>Follow us</p>
               <div className='flex items-center gap-2'>

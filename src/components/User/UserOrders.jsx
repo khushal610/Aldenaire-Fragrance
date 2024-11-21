@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import './user.css';
-import { MdDelete } from "react-icons/md";
+import { MdDelete,MdDoneOutline } from "react-icons/md";
+import { IoTimerOutline } from "react-icons/io5";
+import { FcCancel } from "react-icons/fc";
 
 function UserOrders() {
   const [orderData, setOrderData] = useState([]);
@@ -63,6 +65,7 @@ function UserOrders() {
               <th className='th1'>Quantity</th>
               <th className='th1'>Price</th>
               <th className='th1'>Location</th>
+              <th className='th1'>Payment Status</th>
               <th className='th1'>Date</th>
               <th className='th1'>Delete</th>
             </tr>
@@ -78,6 +81,36 @@ function UserOrders() {
                   <td className="td1">{order.quantity}</td>
                   <td className="td1">{order.productPrice}</td>
                   <td className="td1">{element.location}</td>
+                  <td className="td1">
+                    {element.paymentStatus === "Pending" ? 
+                      (
+                        <>
+                        <div className='flex items-center gap-1 text-red-500 font-medium'>
+                          <IoTimerOutline /> Pending
+                        </div>
+                        </>
+                      ) 
+                      : 
+                      (
+                        <>
+                        <div className='flex items-center gap-1'>
+                        {element.paymentStatus === "Received" ? (
+                          <>
+                          <p className='flex items-center gap-1 text-green-500 font-medium'><MdDoneOutline /> Received</p>
+                          </>
+                        )
+                        :
+                        (
+                          <>
+                          <p className='flex items-center gap-1 text-red-500 font-medium'><FcCancel /> Cancelled</p>
+                          </>
+                        )
+                      }
+                        </div>
+                        </>
+                      ) 
+                    }
+                  </td>
                   <td className="td1">{new Date(element.createdAt).toLocaleDateString()}</td>
                   <td className="td1">
                     <MdDelete className='cursor-pointer' onClick={() => deleteProductFromOrder(element, order, orderIndex)} />

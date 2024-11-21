@@ -11,9 +11,10 @@ const userCartModel = require("./models/user-cart-model");
 const contactUsModel = require("./models/contact-model");
 const orderModel = require("./models/order-model");
 const adminModel = require("./models/admin-model");
+const feedbackModel = require("./models/feedback-model");
 
 const app = express();
-const port = process.env.PORT || 3001;  // Set default port
+const port = process.env.PORT || 3001; 
 const JWT_SECRET = process.env.TOKEN_SECRET;
 
 app.use(express.urlencoded({ extended: true }));
@@ -828,6 +829,80 @@ app.post('/api/delete-user-from-admin',async(req,res) => {
       return res.status(400).send({ error:"User not found" });
     }
     return res.status(200).send({ message:"User Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.post('/api/update-payment-status', async (req, res) => {
+  try {
+    const { id, email, paymentStatus } = req.body;
+    if (!id || !email || !paymentStatus) {
+      return res.status(400).send({ error: "Missing required fields: id, email, or paymentStatus" });
+    }
+    const updatedOrder = await orderModel.findOneAndUpdate(
+      { _id: id, email }, // Find the order by id and email
+      { $set: { paymentStatus } }, // Update the paymentStatus
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).send({ error: "No order found to update" });
+    }
+
+    return res.status(200).send({ status: "ok", data: updatedOrder });
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    return res.status(500).send({ error: "Server error" });
+  }
+});
+
+app.post('/api/add-feedback-data',async(req,res) => {
+  try {
+    const { userName,userMail,rating,suggestions } = req.body
+
+    const feedbackData = new feedbackModel({
+      username:userName,
+      email:userMail,
+      rate:rating,
+      suggestion:suggestions
+    });
+
+    if(!feedbackData){
+      return res.status(400).send({ error:"Feedback not submitted try again later..." });
+    }
+    await feedbackData.save();
+    return res.status(200).send({ status:"ok",data:"Feedback form submitted" });
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
+app.post('/api/get-feedback-data',async(req,res) => {
+  try {
+    const { email } = req.body
+    const feedbackData = await feedbackModel.find({ email });
+
+    if(!feedbackData){
+      return res.status(400).send({ error:"No feedback found" });
+    }
+    return res.status(200).send({ status:"ok",data:feedbackData });
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
+app.post('/api/delete-feedback-data',async(req,res) => {
+  try {
+    const { id,email } = req.body
+    const deleteFeedbackFormData = await feedbackModel.deleteOne({ _id:id },{ email });
+
+    if(!deleteFeedbackFormData){
+      return res.status(400).send("No feedback found");
+    }
+    return res.status(200).send({ status:"ok",data:"Feedback Deleted successfully" });
   } catch (error) {
     console.log(error);
   }

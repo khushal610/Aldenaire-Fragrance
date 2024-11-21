@@ -18,6 +18,7 @@ html{
     --secondary:rgb(231, 212, 181);
     --normal:rgb(246, 230, 203);
     --light-weight:rgb(182, 199, 170);
+    --card-backgound:rgba(27, 105, 86,0.7);
 }
 
 ::-webkit-scrollbar{
@@ -36,7 +37,7 @@ html{
 .home-body{
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(255,255,255,0.1);
     position: relative;
 }
 
@@ -65,8 +66,7 @@ html{
 }
 
 .speacial-btn{
-    background-color: transparent;
-    
+    background-color: transparent;  
     border: 1px solid var(--light-weight);
     box-shadow: 2px 2px var(--light-weight);
     transition: all .3s linear;
@@ -77,6 +77,21 @@ html{
     color: white;
     box-shadow: none;
 }
+
+
+.speacial-btn2{
+    background-color: transparent;  
+    border: 1px solid var(--main);
+    box-shadow: 2px 2px var(--main);
+    transition: all .3s linear;
+}
+.speacial-btn2:hover{
+    background-color: var(--main);  
+    border: 1px solid var(--main);
+    color: white;
+    box-shadow: none;
+}
+
 
 .special-border{
     border: 1px solid var(--light-weight);
@@ -94,3 +109,44 @@ html{
 .user-profile-right-side{
     background-color: var(--secondary);
 }
+
+.why-card-1{
+    border:2px solid var(--light-weight);
+    box-shadow: -4px 4px var(--light-weight);
+    transition: 0.3s;
+}
+.why-card-1:hover{
+    box-shadow: none;
+    background-color: var(--light-weight);
+}
+
+.production-card{
+    background-color: var(--card-backgound);
+}
+
+.celebrity-ad-img-container{
+    position: relative;
+    transition: 0.3s;
+}
+.celebrity-ad-img-container:hover{
+    filter: brightness(0.4);
+    scale: 1.05;
+}
+
+.about-us {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  .about-us h1, .about-us h2, .about-us h3 {
+    color: #6c757d;
+  }
+  
+  .about-us ul {
+    padding-left: 20px;
+  }
+  
+  .about-us ul li {
+    margin-bottom: 8px;
+  }

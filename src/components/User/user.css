@@ -26,3 +26,11 @@
 .order-table-container{
     height: calc(100vh - 25vh);
 }
+
+.user-feedback-table-container{
+    height: 100%;
+}
+
+.user-feedback-no-data{
+    /* height: calc(100vh - 25vh); */
+}

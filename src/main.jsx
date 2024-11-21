@@ -24,6 +24,7 @@ import ProfileDetails from './components/User/ProfileDetails.jsx'
 import UserOrders from './components/User/UserOrders.jsx'
 import UserFeedback from './components/User/UserFeedback.jsx'
 import Manage_products from './components/Admin/Manage_products.jsx'
+import FeedbackFormUI from './components/Forms/FeedbackFormUI.jsx'
 
 
 const router = createBrowserRouter(
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
       <Route path='/order-form' element={<OrderForm />} />
       <Route path='/registration' element={<Registration />} />
       <Route path='/forgotpassword' element={<ForgotPassword />} />
+      <Route path='/feedback' element={<FeedbackFormUI />} />
       <Route path='/admin' element={<Admin />} >
           <Route index element={<Navigate to={"/admin/product"} />} />
           <Route path='/admin/product' element={<Products />} />

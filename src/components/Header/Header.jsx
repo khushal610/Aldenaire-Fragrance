@@ -14,11 +14,11 @@ function Header() {
     const userType = window.localStorage.getItem("userType") || "User";
 
     
+    const token = localStorage.getItem('token');
+    const AdminToken = localStorage.getItem('AdminToken');
     useEffect(() => {
         // console.log(userType);
         const loginLogoutFunctionality = async () => {
-            const token = localStorage.getItem('token');
-            const AdminToken = localStorage.getItem('AdminToken');
             if (AdminToken) {
                 setIsLogged(true);
                 const AdminTokenDecode = jwtDecode(AdminToken);
@@ -92,13 +92,16 @@ function Header() {
                 </div>
             }
             <div className="header-icons flex items-center justify-center gap-3">
-                <NavLink to={'/cart'}>
-                    <button className='rounded-full p-3 flex gap-2 items-center border-white border hover:bg-white transition duration-300 ease-in-out relative'>
-                        <FaShoppingCart />
-                        <p className='absolute left-6 bottom-5 bg-white px-2 rounded-full'>{0}</p>
-                        {/* <p className='absolute left-6 bottom-5 bg-white px-2 rounded-full'>{itemsCounter}</p> */}
-                    </button>
-                </NavLink>
+                {AdminToken ?
+                    null
+                    :
+                    <NavLink to={'/cart'}>
+                        <button className='rounded-full p-3 flex gap-2 items-center border-white border hover:bg-white transition duration-300 ease-in-out relative'>
+                            <FaShoppingCart />
+                            <p className='absolute left-6 bottom-5 bg-white px-2 rounded-full'>{0}</p>
+                        </button>
+                    </NavLink>
+                }
 
                 {isLogged ? 
                     <button

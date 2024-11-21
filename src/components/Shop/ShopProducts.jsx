@@ -7,9 +7,12 @@ import {jwtDecode} from 'jwt-decode';
 function ShopProducts() {
   const [productData, setProductData] = useState([]);
   const [userData,setUserData] = useState([]);
+  const [search,setSearch] = useState();
   const navigate = useNavigate();
 
   const token = localStorage.getItem('token'); 
+  console.log(search);
+
   const fetchProductData = async () => {
     try {
       const result = await axios.get("http://localhost:3000/api/get-products");
@@ -25,12 +28,11 @@ function ShopProducts() {
       alert("Login before shopping");
       return;
     }
-      // console.log(result.data);
-      // console.log(result.data);
     } catch (err) {
       console.log(err);
     }
   };
+
   useEffect(() => {
     fetchProductData();
   }, []);
@@ -71,6 +73,8 @@ function ShopProducts() {
             type="text" 
             placeholder="Search..."
             className="p-2 shadow-md outline-none rounded-md"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div>

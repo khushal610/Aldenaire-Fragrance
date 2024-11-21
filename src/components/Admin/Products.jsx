@@ -39,6 +39,7 @@ function Products() {
   }
 
   const FetchProductID = (e) => {
+    e.preventDefault();
     const value = e.target.value;
     setProductID(value);
   
@@ -59,6 +60,11 @@ function Products() {
         if(result.data && result.data.status === "ok"){
           alert('Product Added Successfully');
           fetchTotalProducts();
+          setProductID('');
+          setProductName('');
+          setProductImgUrl('');
+          setProductPrice('');
+          setProductDescription('');
         }
     } catch (error) {
       console.log(error);
@@ -87,13 +93,18 @@ function Products() {
   }
   
 
-  const updateProduct = async() => {
+  const updateProduct = async(e) => {
+    e.preventDefault();
     try {
-      // console.log(productID);
       const result = await axios.post(`http://localhost:3000/api/update-product`,{ productID,productName,productImgUrl,productPrice,productDescription })
       .catch((err) => { console.log(err) });
       alert('Product details are updated');
       console.log(result.data);
+      setProductID('');
+      setProductName('');
+      setProductImgUrl('');
+      setProductPrice('');
+      setProductDescription('');
     } catch (error) {
       console.log(error);
     }
@@ -201,10 +212,10 @@ function Products() {
                   onClick={(e) => addProduct(e)}
                 >Add Product</button>  
                   <button 
-                  onClick={handleDeleteProduct}
+                  onClick={(e) => handleDeleteProduct(e)}
                   className='text-white bg-red-600 px-3 py-2 rounded-md hover:text-red-600 hover:border hover:border-red-600 hover:bg-white transition-all duration-300 hover:shadow-md'>Remove Product</button>  
                   <button 
-                  onClick={() => updateProduct()}
+                  onClick={(e) => updateProduct(e)}
                   className='text-white bg-red-600 px-3 py-2 rounded-md hover:text-red-600 hover:border hover:border-red-600 hover:bg-white transition-all duration-300 hover:shadow-md'>Update Product</button>  
               </div>
           </form>
