@@ -45,7 +45,7 @@ function Admin() {
           <Link to="/admin/users">Manage Users</Link>
           <Link to="/admin/feedback">Feedback</Link>
           <Link to="/admin/contact-query">User Query</Link>
-          {/* <Link to="#"></Link> */}
+          <Link to="/admin/sell-report">Sell Reports</Link>
           </div>
         </div>
         <div className='right-admin-panel w-10/12 h-full flex items-center justify-center'>

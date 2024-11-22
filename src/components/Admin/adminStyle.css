@@ -57,3 +57,7 @@
 .contact-page-main-container{
     height: calc(100vh - 20vh);
 }
+
+.feedback-table-container{
+    height: calc(100vh - 30vh);
+}

@@ -12,21 +12,31 @@ function FeedbackFormUI() {
     const [userData,setUserData] = useState([]);
 
     const navigate = useNavigate();
-
-    const token = window.localStorage.getItem("token");
-    const DecodeToken = jwtDecode(token);
-    const email = DecodeToken.email;
-
-    const fetchUserData = async() => {
-      const response = await axios.post("http://localhost:3000/api/user-profile-details", { email });
-      const userDetails = response.data.userInfo[0];
-      setUserData(userDetails);
-      setUserName(userDetails.username);
-      setUserMail(userDetails.email);
-    }
-
+    
+    
     useEffect(() => {
-      fetchUserData();
+      const token = window.localStorage.getItem("token");
+      if(!window.localStorage.getItem("token")){
+        alert('Please login first');
+        navigate('/login');
+        return;
+      }
+      try {
+        const DecodeToken = jwtDecode(token);
+        const email = DecodeToken.email;
+  
+        const fetchUserData = async() => {
+          const response = await axios.post("http://localhost:3000/api/user-profile-details", { email });
+          const userDetails = response.data.userInfo[0];
+          setUserData(userDetails);
+          setUserName(userDetails.username);
+          setUserMail(userDetails.email);
+        }
+        fetchUserData();
+
+      } catch(error){
+        console.log(error);
+      }
     },[])
 
     const sendFeedbackFormData = async(e) =>{

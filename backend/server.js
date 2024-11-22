@@ -879,7 +879,7 @@ app.post('/api/add-feedback-data',async(req,res) => {
 })
 
 
-app.post('/api/get-feedback-data',async(req,res) => {
+app.post('/api/get-user-feedback-data',async(req,res) => {
   try {
     const { email } = req.body
     const feedbackData = await feedbackModel.find({ email });
@@ -904,6 +904,31 @@ app.post('/api/delete-feedback-data',async(req,res) => {
     }
     return res.status(200).send({ status:"ok",data:"Feedback Deleted successfully" });
   } catch (error) {
+    console.log(error);
+  }
+})
+
+app.get('/api/send-feedback-data-admin',async(req,res) => {
+  try{
+    const sendData = await feedbackModel.find({ });
+    if(!sendData){
+      return res.status(400).send({ error:"No feedback found" });
+    }
+    return res.status(200).send({ status:"ok",data:sendData });
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.post('/api/delete-feedback-from-admin',async(req,res) => {
+  try{
+    const {id,email} = req.body
+    const deleteData = await feedbackModel.deleteOne({_id:id},{ email });
+    if(!deleteData){
+      return res.status(400).send({ error:"No data found" });
+    }
+    return res.status(200).send({ status:"ok",data:"Feedback deleted successfully" });
+  } catch (error){
     console.log(error);
   }
 })

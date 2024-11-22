@@ -17,7 +17,7 @@ function UserFeedback() {
 
   const fetchFeedBackFormData = async() => {
     try {
-      const response = await axios.post('http://localhost:3000/api/get-feedback-data',{ email });
+      const response = await axios.post('http://localhost:3000/api/get-user-feedback-data',{ email });
       setFeedbackData(response.data.data);
       console.log(feedbackData);
     } catch (error) {
