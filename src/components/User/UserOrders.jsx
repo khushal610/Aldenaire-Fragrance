@@ -71,7 +71,7 @@ function UserOrders() {
             </tr>
           </thead>
           <tbody>
-          {orderData.map((element, index) => (
+          {orderData.filter((element) => element.paymentStatus === "Pending").map((element, index) => (
              element.orderInfo.map((order, orderIndex) => (
                  <tr className="tr1" key={`${index}-${orderIndex}`}>
                   <td className="td1">{order.productName}</td>
