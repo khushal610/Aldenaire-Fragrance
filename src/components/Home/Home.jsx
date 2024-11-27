@@ -5,7 +5,7 @@ import HomeCard from '../Card/HomeCard';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { RiContactsFill,RiMoneyRupeeCircleFill } from "react-icons/ri";
-import { GiDelicatePerfume } from "react-icons/gi";
+import { GiDelicatePerfume,GiFragrance } from "react-icons/gi";
 import { MdPhone } from "react-icons/md";
 import { FaInstagram,FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -105,8 +105,8 @@ function Home() {
             description={"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, consequuntur quis non beatae quod molestiae culpa iusto fuga sed delectus voluptate adipisci reprehenderit nisi nemo?"}
           />
           <WhyCard 
-            icon={<RiMoneyRupeeCircleFill className='text-6xl' />}
-            title={"Less Price"} 
+            icon={<GiFragrance className='text-6xl' />}
+            title={"Premium Quality Ingredients"} 
             description={"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, consequuntur quis non beatae quod molestiae culpa iusto fuga sed delectus voluptate adipisci reprehenderit nisi nemo?"}
           />
         </div>
@@ -173,7 +173,6 @@ function Home() {
               </div>
             </div>
           </div>
-
           <div className='right-contact-section w-6/12'>
             <div className='form-container pt-5 p-10'> {/* bg-red-400 */}
               <form method='post' onSubmit={handleContactForm}>

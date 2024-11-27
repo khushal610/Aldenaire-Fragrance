@@ -140,6 +140,7 @@ function OrderForm() {
                     <p>Default Order Id</p>
                     </div> */}
                     <div className='flex items-center gap-4'>
+                        Payment Type :
                         <div className='flex items-center gap-2'>
                             Cash on Delivery
                             <input 
@@ -149,7 +150,7 @@ function OrderForm() {
                                 onChange={(e) => setPaymentType(e.target.value)}
                             />
                         </div>
-                        <div className='flex items-center gap-2'>
+                        {/* <div className='flex items-center gap-2'>
                             UPI Payment
                             <input 
                                 type="radio" 
@@ -157,7 +158,7 @@ function OrderForm() {
                                 value={"UPI Payment"}
                                 onChange={(e) => setPaymentType(e.target.value)}
                             />
-                        </div>
+                        </div> */}
                     </div>
                     {/* <div>
                     <p>Default Discount price</p>

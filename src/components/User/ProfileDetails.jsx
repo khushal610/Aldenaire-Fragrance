@@ -78,7 +78,7 @@ function ProfileDetails() {
             </div>
             <div className='button-container pt-5'>
             <button
-              className='bg-blue-500 text-white rounded-md px-5 py-2 border hover:border-blue-500 hover:text-blue-500 hover:bg-transparent'
+              className='speacial-btn2 rounded-md px-5 py-2'
               onClick={updateUserProfile}
             >
               Save

@@ -24,6 +24,7 @@ function Contact_query() {
 
   return (
     <div className='contact-page-main-container overflow-x-scroll w-full p-10'>
+        <h1 className='py-3 text-2xl'>User Contact Data</h1>
         <div className='table-container'>
             <table className='table-auto border-2 border-black table1'>
                 <thead>

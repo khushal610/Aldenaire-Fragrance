@@ -36,6 +36,7 @@ function Feedback() {
 
   return (
     <div className='feedback-data-body-admin py-10'>
+      <h1 className='py-5 text-2xl'>Feedback Data</h1>
       <div className='feedback-table-container overflow-x-scroll'>
         <table>
           <thead>

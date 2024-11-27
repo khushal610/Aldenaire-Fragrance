@@ -63,9 +63,10 @@ function Header() {
 
     return (
         <header className='header flex h-20 items-center justify-around fixed z-10 w-full'>
-            <div className="logo flex items-center w-4/12">
-                <img src="Public/Perfume/Perfume Image/logo1.png" width={"15%"} className='w-2/10' />
-                <h1 className='text-2xl text-white'>ldeineire Fragrance</h1>
+            <div className="logo flex items-center w-4/12 pl-7 relative">
+                <img src="/Public/Perfume/Perfume Image/logo1.png" width={"15%"} className='w-2/10 mr-0' />
+                <h1 className='ml-0 pl-12 text-2xl text-white absolute'>ldeineire Fragrance</h1>
+                {/* <h1 className='ml-0 pl-12 text-2xl text-white absolute'>LDENAIRE FRAGRANCE</h1> */}
             </div>
             <div className='navigationBar-Panel w-8/12 flex items-center justify-around'>
             {/* ---------------------------navigation bar links------------------------------- */}

@@ -62,7 +62,7 @@ function UserProfile() {
 
   return (
     <div className='profile-body flex justify-center'>
-      <div className='bg-green-600 profile-panel-container flex justify-center w-10/12 p-4'>
+      <div className='border border-black profile-panel-container flex justify-center w-10/12 p-4'>
         <div className='user-profile-left-side w-4/12'>
           <div className='user-profile-container flex flex-col'>
             <div className='user-profile-image flex justify-center'>

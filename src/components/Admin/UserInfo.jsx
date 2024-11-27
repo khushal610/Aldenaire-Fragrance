@@ -40,10 +40,10 @@ function UserInfo() {
     }
 
   return (
-    <div>
+    <div className='py-10'>
       {/* UserInfo Page */}
       <div className='user-viewer-container overflow-x-scroll w-full p-5'>
-        <table className='table-auto border-2 border-red-500 table1' cellSpacing={0}>
+        <table className='table-auto border-2 table1' cellSpacing={0}>
           <caption>User Information</caption>
           <thead>
             <tr className='tr1'>

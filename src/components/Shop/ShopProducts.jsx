@@ -77,7 +77,7 @@ function ShopProducts() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div>
+        {/* <div>
           Quantity: 
           <select className="shadow-md">
             <option value="35ml">35ml</option>
@@ -85,7 +85,7 @@ function ShopProducts() {
             <option value="200ml">200ml</option>
             <option value="35ml">35ml</option>
           </select>
-        </div>
+        </div> */}
       </div>
       <div className="pt-8 product-container flex flex-wrap items-center justify-center gap-4">
         {productData.map((element, index) => (

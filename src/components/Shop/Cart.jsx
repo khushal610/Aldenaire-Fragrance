@@ -91,7 +91,7 @@ function Cart() {
   }
 
   return (
-    <div>
+    <div className='py-10'>
       <div className="mx-auto flex max-w-3xl flex-col space-y-4 p-6 px-2 sm:p-10 sm:px-2">
         <h2 className="text-3xl font-bold">Your cart</h2>
         <p className="mt-3 text-sm font-medium text-gray-700">
