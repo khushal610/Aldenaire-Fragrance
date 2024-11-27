@@ -235,41 +235,58 @@ app.post('/admin-logged',async(req,res) => {
 });
 
 
-app.post('/api/add-products',async(req,res) => {
-    try {
-      const {productID,productName,productImgUrl,productPrice,productDescription} = req.body
-      // const existedProduct = await productModel.find({productID})
-      // if(existedProduct){
-      //   return res.status(400).send({error:"Product Id or product is alerady Exist"});
-      // }
-      await productModel.create({
-        productID,
-        productName,
-        productImgUrl,
-        productPrice,
-        productDescription
-      })
-      res.status(200).send({data:"Product Added",status:"ok"})
-    } catch (error) {
-      console.log(error);
-    }
-})
-
-
-app.delete('/api/delete-products/:productID', async (req, res) => {
+app.post('/api/add-products', async (req, res) => {
   try {
-    const { productID } = req.params;
-    const deleteProduct = await productModel.deleteOne({ productID });
-
-    if (deleteProduct.deletedCount === 0) {
-      return res.status(400).send({ error: "Product Not Found" });
+    const { productID, productName, productImgUrl, productPrice, productDescription } = req.body;
+    // Use findOne to check if the product already exists
+    const existedProduct = await productModel.findOne({ productID });
+    if (existedProduct) {
+      return res.status(400).send({ status: "exist", error: "Product ID already exists" });
     }
-    return res.status(200).send({ data: "Product Deleted Successfully" });
+    // Create new product if not exist
+    await productModel.create({
+      productID,
+      productName,
+      productImgUrl,
+      productPrice,
+      productDescription,
+    });
+    return res.status(200).send({ data: "Product Added", status: "ok" });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ error: "An error occurred while deleting the product" });
+    res.status(500).send({ status: "error", error: "Something went wrong" });
   }
 });
+
+
+
+// app.delete('/api/delete-products/:productID', async (req, res) => {
+//   try {
+//     const { productID } = req.params;
+//     const deleteProduct = await productModel.deleteOne({ productID });
+
+//     if (deleteProduct.deletedCount === 0) {
+//       return res.status(400).send({ error: "Product Not Found" });
+//     }
+//     return res.status(200).send({ data: "Product Deleted Successfully" });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({ error: "An error occurred while deleting the product" });
+//   }
+// });
+
+app.post('/api/delete-products-from-admin',async(req,res) => {
+  try{
+    const { id } = req.body
+    const DeleteProduct = await productModel.deleteOne({ _id:id });
+    if(!DeleteProduct){
+      return res.status(400).send({ error:"Product Not Found" });
+    }
+    return res.status(200).send({ status:"ok",data:"Product Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+})
 
 
 app.post('/api/update-product',async(req,res) => {
@@ -929,6 +946,46 @@ app.post('/api/delete-feedback-from-admin',async(req,res) => {
     }
     return res.status(200).send({ status:"ok",data:"Feedback deleted successfully" });
   } catch (error){
+    console.log(error);
+  }
+})
+
+
+app.post('/api/add-new-admin',async(req,res) => {
+  try{
+    const { username,email,password,contact } = req.body
+
+    const checkAdminExist = await adminModel.findOne({ email });
+    if(checkAdminExist){
+      return res.status(400).send({ error:"Admin already exists" });
+    }
+
+    const hashAdminPassword = await bcrypt.hash(password,10);
+
+    const newAdmin = new adminModel({
+      username,
+      email,
+      password:hashAdminPassword,
+      contact
+    });
+
+    await newAdmin.save();
+    return res.status(200).send({ status:"ok",data:"New Admin Created" });
+  }catch(error){
+    console.log(error);
+  }
+})
+
+
+app.get('/api/get-admin-details',async(req,res) => {
+  try{
+    const AdminDetails = await adminModel.find({ });
+    if(!AdminDetails){
+      return res.status(400).send({ error:"No Admin Data Found" });
+    }
+    
+    return res.status(200).send({ data:AdminDetails });
+  }catch(error){
     console.log(error);
   }
 })

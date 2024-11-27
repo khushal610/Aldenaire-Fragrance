@@ -54,22 +54,25 @@ function Products() {
   const addProduct = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post('http://localhost:3000/api/add-products', { productID,productName, productImgUrl, productPrice, productDescription }).catch((err) => { console.log(err) });
-        console.log(result);
-        // alert('Product Added Successfully');
-        if(result.data && result.data.status === "ok"){
-          alert('Product Added Successfully');
-          fetchTotalProducts();
-          setProductID('');
-          setProductName('');
-          setProductImgUrl('');
-          setProductPrice('');
-          setProductDescription('');
-        }
+      const result = await axios.post('http://localhost:3000/api/add-products', { productID, productName, productImgUrl, productPrice, productDescription });
+      console.log(result.data);
+      if (result.data && result.data.status === "ok") {
+        alert('Product Added Successfully');
+        fetchTotalProducts();
+        setProductID('');
+        setProductName('');
+        setProductImgUrl('');
+        setProductPrice('');
+        setProductDescription('');
+      }
+      if (!result) {
+        alert('Product ID already exists. Please choose a unique ID.');
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+  
 
   const handleDeleteProduct = async (e) => {
     e.preventDefault();

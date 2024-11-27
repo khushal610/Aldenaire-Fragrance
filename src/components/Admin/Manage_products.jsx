@@ -6,21 +6,48 @@ function Manage_products() {
 
     const [productData, setProductData] = useState([])
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-        try {
-            const res = await axios.get('http://localhost:3000/api/get-products')
-            .catch((error) => { 
-                alert('Product Not Found',error);
-            });
-            setProductData(res.data);
-        } catch (err) {
-            console.log(err);
-        }
-        };
+    const fetchProducts = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/api/get-products')
+        .catch((error) => { 
+            alert('Product Not Found',error);
+        });
+        setProductData(res.data);
+    } catch (err) {
+        console.log(err);
+    }
+    };
 
+    useEffect(() => {
         fetchProducts();
     }, [])
+
+
+    const deleteProduct = async(e,id) => {
+        e.preventDefault();
+        try {
+            let deleteConfirmation = confirm('you really want to delete this product');
+            if(deleteConfirmation){
+                const response = await axios.post('http://localhost:3000/api/delete-products-from-admin',{ id })
+                .catch((e) => { console.log(e) });
+                if(response.data.status === "ok" && response.data.data){
+                    console.log(id);
+                    console.log(response);
+                    alert('Product deleted successfully');
+                    fetchProducts();
+                }
+                else{
+                    alert('Some error occur to delete the product');
+                }
+            }
+            else{
+                alert('process abort');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
   return (
     <div className='product-viewer-body flex flex-col'>
@@ -60,7 +87,7 @@ function Manage_products() {
                         </td>
                         <td className="px-6 py-4">{element.productDescription}</td>
                         <td className="px-6 py-4">{element.productPrice}</td>
-                        <td className="px-6 py-4"><MdDelete /></td>
+                        <td className="px-6 py-4"><MdDelete className='cursor-pointer' onClick={(e) => deleteProduct(e,element._id)} /></td>
                         </tr>
                     ))}
                     </tbody>

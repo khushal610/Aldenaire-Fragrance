@@ -26,6 +26,7 @@ import UserFeedback from './components/User/UserFeedback.jsx'
 import Manage_products from './components/Admin/Manage_products.jsx'
 import FeedbackFormUI from './components/Forms/FeedbackFormUI.jsx'
 import SellReport from './components/Admin/SellReport.jsx'
+import AddAdmin from './components/Admin/AddAdmin.jsx'
 
 
 const router = createBrowserRouter(
@@ -56,6 +57,7 @@ const router = createBrowserRouter(
           <Route path='/admin/feedback' element={<Feedback />} />
           <Route path='/admin/contact-query' element={<Contact_query />} />
           <Route path='/admin/sell-report' element={<SellReport />} />
+          <Route path='/admin/add-new-admin' element={<AddAdmin />} />
       </Route>
     </Route>
   )
