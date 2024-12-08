@@ -77,18 +77,18 @@ function ShopProducts() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {/* <div>
-          Quantity: 
-          <select className="shadow-md">
-            <option value="35ml">35ml</option>
-            <option value="150ml">150ml</option>
-            <option value="200ml">200ml</option>
-            <option value="35ml">35ml</option>
-          </select>
-        </div> */}
       </div>
+
+
+
       <div className="pt-8 product-container flex flex-wrap items-center justify-center gap-4">
-        {productData.map((element, index) => (
+        {productData.filter((item) => {
+          return search === ''
+          ? item
+          : (<>
+          <p>No Data Found</p>
+          </>)
+        }).map((element, index) => (
           <div className="w-[300px] rounded-md border" key={index}>
             <img
               src={element.productImgUrl}

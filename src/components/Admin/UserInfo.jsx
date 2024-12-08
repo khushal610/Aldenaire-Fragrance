@@ -43,8 +43,8 @@ function UserInfo() {
     <div className='py-10'>
       {/* UserInfo Page */}
       <div className='user-viewer-container overflow-x-scroll w-full p-5'>
+          <h1 className='text-2xl py-3'>User Information</h1>
         <table className='table-auto border-2 table1' cellSpacing={0}>
-          <caption>User Information</caption>
           <thead>
             <tr className='tr1'>
               <th className='th1' scope="col">Username</th>

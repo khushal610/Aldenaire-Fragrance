@@ -259,21 +259,21 @@ app.post('/api/add-products', async (req, res) => {
 });
 
 
+app.delete('/api/delete-products/:productID', async (req, res) => {
+  try {
+    const { productID } = req.params;
+    const deleteProduct = await productModel.deleteOne({ productID });
 
-// app.delete('/api/delete-products/:productID', async (req, res) => {
-//   try {
-//     const { productID } = req.params;
-//     const deleteProduct = await productModel.deleteOne({ productID });
+    if (deleteProduct.deletedCount === 0) {
+      return res.status(400).send({ error: "Product Not Found" });
+    }
+    return res.status(200).send({ data: "Product Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: "An error occurred while deleting the product" });
+  }
+});
 
-//     if (deleteProduct.deletedCount === 0) {
-//       return res.status(400).send({ error: "Product Not Found" });
-//     }
-//     return res.status(200).send({ data: "Product Deleted Successfully" });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({ error: "An error occurred while deleting the product" });
-//   }
-// });
 
 app.post('/api/delete-products-from-admin',async(req,res) => {
   try{
@@ -990,6 +990,21 @@ app.get('/api/get-admin-details',async(req,res) => {
   }
 })
 
+
+app.post('/api/delete-contact-data',async(req,res) => {
+  try{
+    const { id } = req.body
+    const deleteContact = await contactUsModel.deleteOne({ _id:id });
+
+    if(!deleteContact){
+      return res.status(400).send({ error:"Contact us form data not found" });
+    }
+    
+    return res.status(200).send({ data:"Contact us form data Deleted" });
+  } catch(error) {
+    console.log(error);
+  }
+})
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

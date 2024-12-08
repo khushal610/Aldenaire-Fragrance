@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdTry } from "react-icons/md";
 import axios from 'axios'
 
 function Contact_query() {
@@ -21,6 +21,22 @@ function Contact_query() {
     useEffect(() => {
         fetchContactUsData();
     },[])
+
+    const deleteContactData = async(e,id) => {
+        e.preventDefault();
+        try{
+            console.log(id);
+            const DeleteContactData = await axios.post('http://localhost:3000/api/delete-contact-data',{ id })
+            .catch((err) => { console.log(err) });
+            if(DeleteContactData.data){
+                alert('Contact us data deleted');
+                console.log(DeleteContactData.data);
+                fetchContactUsData();
+            }
+        } catch(error) {
+            console.log(error);
+        }
+    }
 
   return (
     <div className='contact-page-main-container overflow-x-scroll w-full p-10'>
@@ -44,7 +60,7 @@ function Contact_query() {
                                 <td className='td1 w-1/12'>{element.email}</td>
                                 <td className='td1 w-1/12'>{element.contact}</td>
                                 <td className='td1 w-1/12'>{element.message}</td>
-                                <td className='td1 w-1/12'><MdDelete /></td>
+                                <td className='td1 w-1/12'><MdDelete className='cursor-pointer' onClick={(e) => deleteContactData(e,element._id)} /></td>
                             </tr>
                         })
                     }
