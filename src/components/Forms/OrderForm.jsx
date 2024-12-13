@@ -72,7 +72,7 @@ function OrderForm() {
                 .catch((err) => console.log(err));
                 console.log(deleteCartData.data.data);
                 alert('Your order was placed successfully');
-                navigate('/profile/orders');
+                navigate('/feedback');
             } else {
                 alert('There is some server issue');
             }

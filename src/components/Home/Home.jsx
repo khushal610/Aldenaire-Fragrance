@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect,useState,useRef } from 'react'
 import '../../App.css'
 import Typewriter from 'typewriter-effect';
 import HomeCard from '../Card/HomeCard';
@@ -9,6 +9,7 @@ import { GiDelicatePerfume,GiFragrance } from "react-icons/gi";
 import { MdPhone } from "react-icons/md";
 import { FaInstagram,FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { NavLink } from 'react-router-dom';
 import WhyCard from '../Card/WhyCard';
 import axios from 'axios'
 // E:\sem5-project\e-commerce\node_modules\aos\dist\aos.css
@@ -19,6 +20,12 @@ function Home() {
   const [email,setEmail] = useState('');
   const [contact,setContact] = useState('');
   const [message,setMessage] = useState('');
+
+  const section2Ref = useRef(null);
+
+  const scrollToSection = () => {
+    section2Ref.current.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleContactForm = async(e) => {
       e.preventDefault();
@@ -70,8 +77,8 @@ function Home() {
                   />
                 </p>
                 <div className='flex gap-4 pt-10 text-black'>
-                  <button className='btn1 px-5 py-2 rounded-full'>View More</button>
-                  <button className='btn1 px-5 py-2 rounded-full'>View More</button>
+                  <button className='btn1 px-5 py-2 rounded-full' onClick={scrollToSection}>View More</button>
+                  <NavLink to={'/shop-products'}><button className='btn1 px-5 py-2 rounded-full'>Shop Now</button></NavLink>
                 </div>
               </div>
           </div>
@@ -79,7 +86,7 @@ function Home() {
       </section>
 
       {/* ----------------------------------------section 2--------------------------------------------- */}
-      <section className='pt-10'>
+      <section className='pt-10' ref={section2Ref}>
         <div className='component-title text-center' data-aos="zoom-in-right">
           <h1 className='text-4xl'>Our Popular Products</h1>
         </div>

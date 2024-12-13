@@ -14,6 +14,10 @@ function Registration() {
     const handelRegistrationForm = async(e) => {
         e.preventDefault();
         try {
+            if(contact.length !== 10){
+                alert('Mobile Number must be 10 digit');
+                return;
+            }
             await axios.post("http://localhost:3000",{ username,email,password,contact,address })
             .then(() => {console.log("Form submitted")})
             .catch((e) => {console.log(e)});

@@ -68,7 +68,7 @@ function ShopProducts() {
   return (
     <div className="p-10">
       <div className="flex gap-4 items-center">
-        <div>
+        {/* <div>
           <input 
             type="text" 
             placeholder="Search..."
@@ -76,19 +76,23 @@ function ShopProducts() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </div>
+        </div> */}
       </div>
 
 
 
       <div className="pt-8 product-container flex flex-wrap items-center justify-center gap-4">
-        {productData.filter((item) => {
-          return search === ''
-          ? item
-          : (<>
-          <p>No Data Found</p>
-          </>)
-        }).map((element, index) => (
+        {productData
+        // .filter((item) => {
+        //   return search === ''
+        //   ? item
+        //   : 
+        //   item.productName.toLowerCase().includes(search);
+        //   (<>
+        //   <p>No Data Found</p>
+        //   </>)
+        // })
+        .map((element, index) => (
           <div className="w-[300px] rounded-md border" key={index}>
             <img
               src={element.productImgUrl}

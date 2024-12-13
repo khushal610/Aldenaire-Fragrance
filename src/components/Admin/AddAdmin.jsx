@@ -30,6 +30,11 @@ function AddAdmin() {
     const addNewAdmin = async(e) => { 
         e.preventDefault();
         try{
+            if(contact.length !== 10){
+                alert('Contact number must be 10 digit');
+                return;
+            }
+
             const response = await axios.post('http://localhost:3000/api/add-new-admin',{ username,email,password,contact })
             .catch((err) => console.log(err));
             // alert('Admin Created');
@@ -39,6 +44,7 @@ function AddAdmin() {
                 setEmail('');
                 setPassword('');
                 setContact('');
+                fetchAdminData();
             }
         } catch (error) {
             console.log(error);
@@ -47,11 +53,13 @@ function AddAdmin() {
 
   return (
     <>
-        <div className='flex items-center justify-center w-full'>
+        <div className='flex flex-col items-center justify-center w-full'>
         {
-            adminData.length < 3
+            adminData.length < 5
             ?
-                <div className="py-10 w-6/12 flex justify-center items-center ">
+            <>
+            <div className="pb-7 w-6/12 flex flex-col justify-center items-center ">
+            <p className='p-3'>Total Number of Admin : {adminData.length}</p>
                 <div className="w-full p-6 rounded-lg shadow-2xl border border-black">
                     <h2 className="text-2xl font-bold text-center mb-6">Add Admin</h2>
                     <form>
@@ -149,6 +157,7 @@ function AddAdmin() {
                     </form>
                 </div>
                 </div>
+                </>
             :
             (
                 <div className="flex items-center justify-center h-96">

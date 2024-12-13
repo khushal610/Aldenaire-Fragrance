@@ -103,7 +103,7 @@ function Header() {
                         <NavLink to={'/cart'}>
                             <button className='rounded-full p-3 flex gap-2 items-center border-white border hover:bg-white transition duration-300 ease-in-out relative'>
                                 <FaShoppingCart />
-                                <p className='absolute left-6 bottom-5 bg-white px-2 rounded-full'>{0}</p>
+                                {/* <p className='absolute left-6 bottom-5 bg-white px-2 rounded-full'>{0}</p> */}
                             </button>
                         </NavLink>
                     }

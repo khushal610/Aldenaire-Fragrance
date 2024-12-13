@@ -69,7 +69,7 @@ function UserOrders() {
   return (
     <div className='w-full relative'>
       <div className='order-table-container overflow-x-scroll'>
-        <table className='table1'>
+        <table className='table1 mb-12'>
           <thead>
             <tr className='tr1'>
               <th className='th1'>Product Name</th>
