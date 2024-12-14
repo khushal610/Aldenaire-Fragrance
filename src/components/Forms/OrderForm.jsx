@@ -48,6 +48,12 @@ function OrderForm() {
 
             if(!paymentType){
                 alert('Please select the payment type');
+                return;
+            }
+
+            if(contact.length !== 10){
+                alert('Contact number must be 10 digit');
+                return;
             }
 
             const orderData = {

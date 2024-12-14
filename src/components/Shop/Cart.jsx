@@ -135,9 +135,9 @@ function Cart() {
                         >
                         <span className='flex items-center'><MdDeleteOutline className='text-xl' /> Remove</span>
                       </button>
-                      <button type="button" className="flex items-center space-x-2 px-2 py-1">
+                      {/* <button type="button" className="flex items-center space-x-2 px-2 py-1">
                         <span>Add to favorites</span>
-                      </button>
+                      </button> */}
                       
                     </div>
                   </div>
